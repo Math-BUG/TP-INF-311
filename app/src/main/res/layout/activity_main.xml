@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
+    xmlns:pp="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_height="match_parent"
     android:background="#001F23"
@@ -35,53 +35,73 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Campo de e-mail -->
-    <EditText
+
+    <!-- Campo de e-mail ATUALIZADO -->
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailInput"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@drawable/edit_text_background"
-        android:hint="Enter your email address"
-        android:inputType="textEmailAddress"
-        android:textColor="#FFF"
-        android:textColorHint="#AAA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        android:textColorHint="#AAA"
+        app:boxBackgroundMode="outline">
 
-    <!-- Campo de senha com visibilidade -->
-    <EditText
-        android:id="@+id/passwordLayout"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailInputText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your email address"
+            android:inputType="textEmailAddress"
+            android:textColor="#001F23"
+            android:background="@drawable/edit_text_background" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo de senha com olho de visibilidade -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordInputLayout"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edit_text_background"
-        android:hint="Enter your password"
-        android:inputType="textPassword"
-        android:textColor="#FFF"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:endIconMode="password_toggle"
+        app:endIconTint="#AAA"
         android:textColorHint="#AAA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailInput" />
+        app:layout_constraintTop_toBottomOf="@id/emailInput">
 
-    <!-- Esqueci minha senha -->
-    <TextView
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:textColor="#001F23"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Esqueci minha senha  -->
+    <Button
         android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:background="@drawable/ripple_effect"
         android:text="Forgot password?"
         android:textColor="#A8A8A8"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout" />
+        app:layout_constraintTop_toBottomOf="@id/passwordInputLayout" />
 
     <!-- Checkbox Termos -->
     <CheckBox
         android:id="@+id/termsCheckbox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         android:text="I’ve read and agreed to User Agreement and Privacy Policy"
         android:textColor="#E0F7FA"
         android:textSize="14sp"
@@ -108,50 +128,59 @@
         android:id="@+id/otherSignInText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
         android:text="other way to sign in"
-        android:textColor="#D0E0E0"
+        android:textColor="#E0F7FA"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signInButton" />
 
-    <!-- Google e Facebook -->
+    <!-- Google e Facebook  -->
     <LinearLayout
         android:id="@+id/socialButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/otherSignInText"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/otherSignInText">
 
-        <ImageView
+        <Button
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="61dp"
+            android:layout_height="60dp"
+            android:background="@drawable/ripple_effect"
+            app:icon="@drawable/ic_google"
+            app:iconSize="40dp"
+            app:iconTint="@null" />
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_google"
-            android:contentDescription="Google Login" />
+            android:background="@drawable/ripple_effect"
+            app:icon="@drawable/ic_facebook"
+            app:iconSize="40dp"
+            app:iconTint="@null" />
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_facebook"
-            android:contentDescription="Facebook Login" />
     </LinearLayout>
 
-    <!-- Criar conta -->
-    <TextView
+    <!-- Criar conta  -->
+    <Button
         android:id="@+id/createAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ripple_effect"
         android:text="Don’t have an account? Create Account"
         android:textColor="#E0F7FA"
         android:textSize="14sp"
+
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/socialButtons" />
 
