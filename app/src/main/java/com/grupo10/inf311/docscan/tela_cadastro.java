@@ -10,22 +10,22 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class tela_cadastro extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        setContentView(R.layout.activity_tela_cadastro);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.tela_cadastro), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         // so para teste
-        //clicar no botao create account leva pra tela de cadastro
-        Button btnCreateAccount = findViewById(R.id.createAccountButton);
-        btnCreateAccount.setOnClickListener(v -> {
+        //clicar no botao Back to Sign In leva de volta pra tela de login
+        Button btnBackSignIn = findViewById(R.id.backToSignInButton);
+        btnBackSignIn.setOnClickListener(v -> {
             Intent it = new Intent(this, tela_cadastro.class);
             startActivity(it);
         });
