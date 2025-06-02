@@ -29,5 +29,10 @@ public class MainActivity extends AppCompatActivity {
             Intent it = new Intent(this, tela_cadastro.class);
             startActivity(it);
         });
+        Button btnTesteLangaugeTool = findViewById(R.id.signInButton);
+        btnCreateAccount.setOnClickListener(v -> {
+            Intent it = new Intent(this, LanguageToolActivity.class);
+            startActivity(it);
+        });
     }
 }
