@@ -11,7 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +30,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(it);
         });
         Button btnTesteLangaugeTool = findViewById(R.id.signInButton);
-        btnCreateAccount.setOnClickListener(v -> {
+        btnTesteLangaugeTool.setOnClickListener(v -> {
             Intent it = new Intent(this, LanguageToolActivity.class);
+            startActivity(it);
+        });
+        Button btnOcrTeste = findViewById(R.id.forgotPassword);
+        btnOcrTeste.setOnClickListener(v -> {
+            Intent it = new Intent(this, OcrActivity.class);
             startActivity(it);
         });
     }

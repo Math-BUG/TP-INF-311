@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converter.gson)
+    implementation(libs.google.mlkit.textrecognition)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
