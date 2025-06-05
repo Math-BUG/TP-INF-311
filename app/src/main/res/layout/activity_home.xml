@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="Adicionar Documento"
-                app:backgroundTint="#2D8582"
+                app:backgroundTint="@color/dark_green"
                 app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="@+id/text_documents_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -96,8 +96,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@android:color/white"
-        android:elevation="8dp"
-        app:menu="@menu/bottom_nav_menu" />
+        android:background="@color/dark_green"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconSize="36dp"
+        app:itemIconTint="@color/light_blue" app:itemTextColor="@color/light_blue" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
