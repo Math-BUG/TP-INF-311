@@ -96,9 +96,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/dark_green"
-        app:menu="@menu/bottom_nav_menu"
+        android:background="@color/dark_green" app:menu="@menu/bottom_nav_menu"
         app:itemIconSize="36dp"
-        app:itemIconTint="@color/light_blue" app:itemTextColor="@color/light_blue" />
+        app:itemIconTint="@color/light_blue" app:itemTextColor="@color/light_blue" app:itemBackground="@color/dark_green"
+        app:itemActiveIndicatorStyle="@null" />
+        />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,18 +5,13 @@
         android:id="@+id/menu_scan"
         android:icon="@drawable/menu_open"
         android:title="" />
-
-
     <item
         android:id="@+id/menu_home"
-
         android:title="Selecionar" />
-
     <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/settings"
         android:title=""
-
         />
 
 </menu>
