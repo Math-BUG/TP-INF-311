@@ -2,46 +2,55 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardViewDocument" android:layout_width="match_parent"
+    android:id="@+id/cardViewDocument"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardElevation="4dp"
     app:cardCornerRadius="12dp"
-    android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground"> <LinearLayout
-    android:id="@+id/documentItemLayout" android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
-
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="60dp"
-        android:src="@android:drawable/ic_menu_report_image"
-        android:contentDescription="Document Icon"/>
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="16dp">
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/txtDocName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Document Name"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+        <ImageView
+            android:id="@+id/imgDocThumbnail" android:layout_width="60dp" android:layout_height="80dp"
+            />
 
-        <TextView
-            android:id="@+id/txtDocDate"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Date"
-            android:textSize="14sp"/>
+            android:layout_weight="1"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/txtDocName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Document Name"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/txtDocDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/txtDocPages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 page"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"/> </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
 </androidx.cardview.widget.CardView>
