@@ -30,8 +30,8 @@ public class DocumentActionActivity extends AppCompatActivity {
         TextView tvDocumentId = findViewById(R.id.tvDocumentId);
         TextView tvDocumentName = findViewById(R.id.tvDocumentName);
         ImageView imgFullDocument = findViewById(R.id.imgFullDocument);
-        Button btnEdit = findViewById(R.id.btnEdit);
-        Button btnShare = findViewById(R.id.btnShare);
+        Button btnAction = findViewById(R.id.btnAction);
+        Button btnDocScan = findViewById(R.id.btnDocScan);
 
         // Lógica do Intent (permanece a mesma)
         Intent intent = getIntent();
@@ -52,8 +52,15 @@ public class DocumentActionActivity extends AppCompatActivity {
         }
 
         // Listeners dos botões (permanecem os mesmos)
-        btnEdit.setOnClickListener(v -> Toast.makeText(this, "Editar clicado!", Toast.LENGTH_SHORT).show());
-        btnShare.setOnClickListener(v -> Toast.makeText(this, "Compartilhar clicado!", Toast.LENGTH_SHORT).show());
+        btnDocScan.setOnClickListener(v ->{
+                Intent it = new Intent(this, OcrActivity.class);
+                startActivity(it);
+        });
+
+        btnAction.setOnClickListener(v ->{
+            Intent it = new Intent(this, LanguageToolResponse.class);
+            startActivity(it);
+        });
 
 
         // 2. LÓGICA DO BOTTOM NAVIGATION ADICIONADA
