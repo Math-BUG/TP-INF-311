@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         });
         Button btnTesteLangaugeTool = findViewById(R.id.signInButton);
         btnTesteLangaugeTool.setOnClickListener(v -> {
-            Intent it = new Intent(this, LanguageToolActivity.class);
+//            Intent it = new Intent(this, LanguageToolActivity.class);
+//            startActivity(it);
+            Intent it = new Intent(this, HomeActivity.class);
             startActivity(it);
         });
         Button btnOcrTeste = findViewById(R.id.forgotPassword);
