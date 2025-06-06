@@ -28,7 +28,7 @@ public class DocumentActionActivity extends AppCompatActivity {
         ImageView imgFullDocument = findViewById(R.id.imgFullDocument);
         Button btnEdit = findViewById(R.id.btnEdit);
         Button btnShare = findViewById(R.id.btnShare);
-        Button btnDelete = findViewById(R.id.btnDelete);
+
 
         // Receber os dados do Intent
         Intent intent = getIntent();
@@ -37,7 +37,7 @@ public class DocumentActionActivity extends AppCompatActivity {
             String documentName = intent.getStringExtra(EXTRA_DOCUMENT_NAME);
             String imagePath = intent.getStringExtra(EXTRA_DOCUMENT_IMAGE_PATH);
 
-            tvDocumentId.setText("ID: " + documentId);
+            //tvDocumentId.setText("ID: " + documentId);
             tvDocumentName.setText("Nome: " + documentName);
 
             if (imagePath != null && !imagePath.isEmpty()) {
@@ -55,6 +55,6 @@ public class DocumentActionActivity extends AppCompatActivity {
         // Configurar Listeners para os botões de ação
         btnEdit.setOnClickListener(v -> Toast.makeText(this, "Editar clicado!", Toast.LENGTH_SHORT).show());
         btnShare.setOnClickListener(v -> Toast.makeText(this, "Compartilhar clicado!", Toast.LENGTH_SHORT).show());
-        btnDelete.setOnClickListener(v -> Toast.makeText(this, "Excluir clicado!", Toast.LENGTH_SHORT).show());
+
     }
 }
