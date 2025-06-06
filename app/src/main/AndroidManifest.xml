@@ -33,7 +33,7 @@
         </provider>
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,6 +41,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            />
         <activity
             android:name=".DocumentActionActivity"
             android:exported="false" />
