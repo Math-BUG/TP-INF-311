@@ -25,6 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DocScan">
         <activity
+            android:name=".TextViewerActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProcessingActivity"
             android:exported="false" />
 

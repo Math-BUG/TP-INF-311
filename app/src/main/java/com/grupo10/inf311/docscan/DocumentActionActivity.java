@@ -1,29 +1,31 @@
-// DocumentActionActivity.java
 package com.grupo10.inf311.docscan;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils; // Importe esta classe
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.File;
 
 public class DocumentActionActivity extends AppCompatActivity {
 
-    public static final String EXTRA_DOCUMENT_ID = "document_id";
-    public static final String EXTRA_DOCUMENT_NAME = "document_name";
-    public static final String EXTRA_DOCUMENT_IMAGE_PATH = "document_image_path";
+    public static final String EXTRA_DOCUMENT_ID = "EXTRA_DOCUMENT_ID";
+    public static final String EXTRA_DOCUMENT_NAME = "EXTRA_DOCUMENT_NAME";
+    public static final String EXTRA_DOCUMENT_IMAGE_PATH = "EXTRA_DOCUMENT_IMAGE_PATH";
 
-    // Variáveis para armazenar os dados do documento recebido
-    private String documentId;
-    private String documentName;
-    private String imagePath;
+    private String documentImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,73 +38,129 @@ public class DocumentActionActivity extends AppCompatActivity {
         Button btnAction = findViewById(R.id.btnAction);
         Button btnDocScan = findViewById(R.id.btnDocScan);
 
-        // Lógica do Intent para receber os dados
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(EXTRA_DOCUMENT_ID)) {
-            // Armazena os dados nas variáveis da classe
-            this.documentId = intent.getStringExtra(EXTRA_DOCUMENT_ID);
-            this.documentName = intent.getStringExtra(EXTRA_DOCUMENT_NAME);
-            this.imagePath = intent.getStringExtra(EXTRA_DOCUMENT_IMAGE_PATH);
+        String documentId = intent.getStringExtra(EXTRA_DOCUMENT_ID);
+        String documentName = intent.getStringExtra(EXTRA_DOCUMENT_NAME);
+        documentImagePath = intent.getStringExtra(EXTRA_DOCUMENT_IMAGE_PATH);
 
-            tvDocumentName.setText("Nome: " + this.documentName);
-            tvDocumentId.setText("ID: " + this.documentId); // Exibindo o ID também
+        tvDocumentId.setText("Document ID: " + documentId);
+        tvDocumentName.setText("Document Name: " + documentName);
 
-            if (this.imagePath != null && !this.imagePath.isEmpty()) {
-                Glide.with(this).load(this.imagePath).into(imgFullDocument);
-            } else {
-                imgFullDocument.setImageResource(R.drawable.menu36); // Imagem placeholder
-            }
+        if (documentImagePath != null && !documentImagePath.isEmpty()) {
+            Glide.with(this).load(Uri.parse(documentImagePath)).into(imgFullDocument);
         } else {
-            Toast.makeText(this, "Nenhum documento selecionado.", Toast.LENGTH_SHORT).show();
-            finish();
-            return; // Encerra o onCreate se não houver dados
+            imgFullDocument.setImageResource(R.drawable.ic_launcher_background);
         }
 
-        // --- LISTENER DO BOTÃO DE OCR CORRIGIDO ---
+        // --- LÓGICA DO BOTÃO "ACTION" ATUALIZADA ---
+        // Agora o botão abre um diálogo com opções.
+        btnAction.setOnClickListener(v -> {
+            showActionDialog();
+        });
+
         btnDocScan.setOnClickListener(v -> {
-            // Verifica se há um caminho de imagem antes de iniciar
-            if (TextUtils.isEmpty(this.imagePath)) {
-                Toast.makeText(this, "Este documento não possui uma imagem para processar.", Toast.LENGTH_SHORT).show();
+            // Apenas imagens podem ser processadas pelo OCR
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(documentImagePath);
+            if (TextUtils.isEmpty(documentImagePath) || "txt".equalsIgnoreCase(fileExtension)) {
+                Toast.makeText(this, "Apenas imagens podem passar pelo processo de OCR.", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // MUDANÇA AQUI: Inicia a ProcessingActivity em vez da OcrActivity
             Intent processingIntent = new Intent(this, ProcessingActivity.class);
-
-            // Envia o caminho da imagem para a ProcessingActivity
-            processingIntent.putExtra(OcrActivity.EXTRA_IMAGE_URI, this.imagePath); // Podemos reusar a mesma chave
-
-            // Inicia a nova tela
+            processingIntent.putExtra(OcrActivity.EXTRA_IMAGE_URI, documentImagePath);
             startActivity(processingIntent);
         });
+    }
 
-        // Listener do outro botão (ação indefinida)
-        btnAction.setOnClickListener(v -> {
-            // ATENÇÃO: LanguageToolResponse não é uma Activity e não pode ser iniciada com um Intent.
-            // A linha abaixo causará um erro.
-            // Intent it = new Intent(this, LanguageToolResponse.class);
-            // startActivity(it);
-            Toast.makeText(this, "Ação para este botão precisa ser definida.", Toast.LENGTH_SHORT).show();
-        });
+    /**
+     * NOVO MÉTODO: Cria e exibe um diálogo com a lista de ações para o documento.
+     */
+    private void showActionDialog() {
+        final CharSequence[] options = {"Visualizar Documento", "Compartilhar", "Renomear", "Excluir"};
 
-        // Lógica do Bottom Navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.menu_home);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.menu_scan) {
-                // Inicia a OcrActivity para um novo scan, sem imagem pré-definida
-                startActivity(new Intent(getApplicationContext(), OcrActivity.class));
-                return true;
-            } else if (itemId == R.id.menu_home) {
-                // Volta para a lista de documentos
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                return true;
-            } else if (itemId == R.id.menu_settings) {
-                Toast.makeText(DocumentActionActivity.this, "Configurações clicado!", Toast.LENGTH_SHORT).show();
-                return true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Escolha uma Ação");
+        builder.setItems(options, (dialog, item) -> {
+            if (options[item].equals("Visualizar Documento")) {
+                viewDocument(); // Reutiliza o método que já criamos
+            } else if (options[item].equals("Compartilhar")) {
+                shareDocument(); // Chama um novo método para compartilhar
+            } else if (options[item].equals("Renomear")) {
+                Toast.makeText(this, "Função Renomear a ser implementada.", Toast.LENGTH_SHORT).show();
+            } else if (options[item].equals("Excluir")) {
+                Toast.makeText(this, "Função Excluir a ser implementada.", Toast.LENGTH_SHORT).show();
             }
-            return false;
         });
+        builder.show();
+    }
+
+    /**
+     * NOVO MÉTODO: Compartilha o arquivo do documento.
+     */
+    private void shareDocument() {
+        if (TextUtils.isEmpty(documentImagePath)) {
+            Toast.makeText(this, "Nenhum arquivo de documento para compartilhar.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Uri pathUri = Uri.parse(documentImagePath);
+        File fileToShare = new File(pathUri.getPath());
+
+        if (!fileToShare.exists()) {
+            Toast.makeText(this, "Arquivo não encontrado para compartilhar.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Uri contentUri = FileProvider.getUriForFile(
+                this,
+                getApplicationContext().getPackageName() + ".provider",
+                fileToShare
+        );
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType(getMimeType(contentUri.toString()));
+        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        startActivity(Intent.createChooser(shareIntent, "Compartilhar documento via..."));
+    }
+
+    /**
+     * Este método agora é uma das opções do diálogo.
+     */
+    private void viewDocument() {
+        if (TextUtils.isEmpty(documentImagePath)) {
+            Toast.makeText(this, "Nenhum arquivo de documento para visualizar.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(documentImagePath);
+
+        if ("txt".equalsIgnoreCase(fileExtension)) {
+            Intent textViewerIntent = new Intent(this, TextViewerActivity.class);
+            textViewerIntent.putExtra(TextViewerActivity.EXTRA_FILE_PATH, documentImagePath);
+            startActivity(textViewerIntent);
+        } else {
+            openFileWithSystemViewer(Uri.parse(documentImagePath));
+        }
+    }
+
+    private void openFileWithSystemViewer(Uri pathUri) {
+        Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+        viewIntent.setDataAndType(pathUri, getMimeType(pathUri.toString()));
+        viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            startActivity(viewIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "Nenhum aplicativo encontrado para abrir este arquivo.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+        }
+        return type;
     }
 }
