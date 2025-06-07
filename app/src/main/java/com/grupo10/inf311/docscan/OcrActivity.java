@@ -104,7 +104,6 @@ public class OcrActivity extends AppCompatActivity {
 
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
-        // LÓGICA ADICIONADA: Verifica se a atividade foi iniciada com uma imagem vinda de outra tela.
         handleIncomingIntent();
 
         buttonCaptureImage.setOnClickListener(v -> {

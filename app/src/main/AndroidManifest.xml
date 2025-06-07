@@ -7,10 +7,13 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-
 
     <application
         android:allowBackup="true"
@@ -21,6 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DocScan">
+        <activity
+            android:name=".ProcessingActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -37,25 +43,22 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".HomeActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".DocumentActionActivity"
             android:exported="false" />
-
         <activity
             android:name=".OcrActivity"
             android:exported="false" />
-
         <activity
             android:name=".tela_cadastro"
             android:exported="false" />
-
     </application>
+
 </manifest>

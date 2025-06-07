@@ -60,20 +60,20 @@ public class DocumentActionActivity extends AppCompatActivity {
 
         // --- LISTENER DO BOTÃO DE OCR CORRIGIDO ---
         btnDocScan.setOnClickListener(v -> {
-            // 1. Verifica se existe um caminho de imagem
+            // Verifica se há um caminho de imagem antes de iniciar
             if (TextUtils.isEmpty(this.imagePath)) {
-                Toast.makeText(this, "Documento não possui imagem para processar.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Este documento não possui uma imagem para processar.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 2. Cria o Intent para a OcrActivity
-            Intent it = new Intent(this, OcrActivity.class);
+            // MUDANÇA AQUI: Inicia a ProcessingActivity em vez da OcrActivity
+            Intent processingIntent = new Intent(this, ProcessingActivity.class);
 
-            // 3. Adiciona o caminho da imagem ao Intent
-            it.putExtra(OcrActivity.EXTRA_IMAGE_URI, this.imagePath);
+            // Envia o caminho da imagem para a ProcessingActivity
+            processingIntent.putExtra(OcrActivity.EXTRA_IMAGE_URI, this.imagePath); // Podemos reusar a mesma chave
 
-            // 4. Inicia a OcrActivity
-            startActivity(it);
+            // Inicia a nova tela
+            startActivity(processingIntent);
         });
 
         // Listener do outro botão (ação indefinida)
