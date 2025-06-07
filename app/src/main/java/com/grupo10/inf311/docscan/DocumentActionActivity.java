@@ -1,19 +1,18 @@
 // DocumentActionActivity.java
-package com.grupo10.inf311.docscan; // Verifique o seu pacote
+package com.grupo10.inf311.docscan;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.text.TextUtils; // Importe esta classe
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView; // 1. IMPORT ADICIONADO
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DocumentActionActivity extends AppCompatActivity {
 
@@ -21,67 +20,86 @@ public class DocumentActionActivity extends AppCompatActivity {
     public static final String EXTRA_DOCUMENT_NAME = "document_name";
     public static final String EXTRA_DOCUMENT_IMAGE_PATH = "document_image_path";
 
+    // Variáveis para armazenar os dados do documento recebido
+    private String documentId;
+    private String documentName;
+    private String imagePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_action);
 
-        // Seus componentes existentes
         TextView tvDocumentId = findViewById(R.id.tvDocumentId);
         TextView tvDocumentName = findViewById(R.id.tvDocumentName);
         ImageView imgFullDocument = findViewById(R.id.imgFullDocument);
         Button btnAction = findViewById(R.id.btnAction);
         Button btnDocScan = findViewById(R.id.btnDocScan);
 
-        // Lógica do Intent (permanece a mesma)
+        // Lógica do Intent para receber os dados
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_DOCUMENT_ID)) {
-            String documentId = intent.getStringExtra(EXTRA_DOCUMENT_ID);
-            String documentName = intent.getStringExtra(EXTRA_DOCUMENT_NAME);
-            String imagePath = intent.getStringExtra(EXTRA_DOCUMENT_IMAGE_PATH);
-            tvDocumentName.setText("Nome: " + documentName);
+            // Armazena os dados nas variáveis da classe
+            this.documentId = intent.getStringExtra(EXTRA_DOCUMENT_ID);
+            this.documentName = intent.getStringExtra(EXTRA_DOCUMENT_NAME);
+            this.imagePath = intent.getStringExtra(EXTRA_DOCUMENT_IMAGE_PATH);
 
-            if (imagePath != null && !imagePath.isEmpty()) {
-                Glide.with(this).load(imagePath).into(imgFullDocument);
+            tvDocumentName.setText("Nome: " + this.documentName);
+            tvDocumentId.setText("ID: " + this.documentId); // Exibindo o ID também
+
+            if (this.imagePath != null && !this.imagePath.isEmpty()) {
+                Glide.with(this).load(this.imagePath).into(imgFullDocument);
             } else {
-                imgFullDocument.setImageResource(R.drawable.menu36);
+                imgFullDocument.setImageResource(R.drawable.menu36); // Imagem placeholder
             }
         } else {
             Toast.makeText(this, "Nenhum documento selecionado.", Toast.LENGTH_SHORT).show();
             finish();
+            return; // Encerra o onCreate se não houver dados
         }
 
-        // Listeners dos botões (permanecem os mesmos)
-        btnDocScan.setOnClickListener(v ->{
-                Intent it = new Intent(this, OcrActivity.class);
-                startActivity(it);
-        });
+        // --- LISTENER DO BOTÃO DE OCR CORRIGIDO ---
+        btnDocScan.setOnClickListener(v -> {
+            // 1. Verifica se existe um caminho de imagem
+            if (TextUtils.isEmpty(this.imagePath)) {
+                Toast.makeText(this, "Documento não possui imagem para processar.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        btnAction.setOnClickListener(v ->{
-            Intent it = new Intent(this, LanguageToolResponse.class);
+            // 2. Cria o Intent para a OcrActivity
+            Intent it = new Intent(this, OcrActivity.class);
+
+            // 3. Adiciona o caminho da imagem ao Intent
+            it.putExtra(OcrActivity.EXTRA_IMAGE_URI, this.imagePath);
+
+            // 4. Inicia a OcrActivity
             startActivity(it);
         });
 
+        // Listener do outro botão (ação indefinida)
+        btnAction.setOnClickListener(v -> {
+            // ATENÇÃO: LanguageToolResponse não é uma Activity e não pode ser iniciada com um Intent.
+            // A linha abaixo causará um erro.
+            // Intent it = new Intent(this, LanguageToolResponse.class);
+            // startActivity(it);
+            Toast.makeText(this, "Ação para este botão precisa ser definida.", Toast.LENGTH_SHORT).show();
+        });
 
-        // 2. LÓGICA DO BOTTOM NAVIGATION ADICIONADA
+        // Lógica do Bottom Navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // Opcional: define um item como selecionado (ex: o "home")
         bottomNavigationView.setSelectedItemId(R.id.menu_home);
-
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_scan) {
-                Toast.makeText(DocumentActionActivity.this, "Scan clicado!", Toast.LENGTH_SHORT).show();
-                // Exemplo: startActivity(new Intent(getApplicationContext(), ScanActivity.class));
+                // Inicia a OcrActivity para um novo scan, sem imagem pré-definida
+                startActivity(new Intent(getApplicationContext(), OcrActivity.class));
                 return true;
             } else if (itemId == R.id.menu_home) {
-                Toast.makeText(DocumentActionActivity.this, "Home clicado!", Toast.LENGTH_SHORT).show();
-                // Exemplo: startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                // Volta para a lista de documentos
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 return true;
             } else if (itemId == R.id.menu_settings) {
                 Toast.makeText(DocumentActionActivity.this, "Configurações clicado!", Toast.LENGTH_SHORT).show();
-                // Exemplo: startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
             }
             return false;
