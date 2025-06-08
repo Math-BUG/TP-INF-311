@@ -35,9 +35,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         Document currentDoc = docList.get(position);
         holder.txtDocName.setText(currentDoc.getName());
         holder.txtDocDate.setText(currentDoc.getDate());
-        // Supondo que você queira exibir "1 page" para todos os documentos,
-        // ou você pode adicionar um campo 'pages' ao seu modelo Document.
+
         holder.txtDocPages.setText("1 page");
+
 
         // Carregar imagem usando Glide
         if (currentDoc.getImagePath() != null && !currentDoc.getImagePath().isEmpty()) {
@@ -111,7 +111,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         void onDocumentAction(String documentId); // Para levar à tela de ações
     }
 
-    // ... (restante dos métodos do adaptador) ...
     public void addDocument(int position, Document document) {
         docList.add(position, document);
         if (selectedPosition != RecyclerView.NO_POSITION && position <= selectedPosition) {
@@ -120,7 +119,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         notifyItemInserted(position);
     }
 
-    // Certifique-se de que getSelectedDocumentId() ainda esteja funcionando corretamente
+
     public String getSelectedDocumentId() {
         if (selectedPosition != RecyclerView.NO_POSITION && selectedPosition < docList.size()) {
             return docList.get(selectedPosition).getId();
