@@ -19,6 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 
@@ -50,7 +54,7 @@ public class DocumentActionActivity extends AppCompatActivity {
     private String documentImagePath;
     private String ocrTextResult = "";
 
-    // Adicionado: Serviço para a API LanguageTool
+
     private LanguageToolApiService languageToolService;
 
     private final ActivityResultLauncher<Intent> ocrResultLauncher = registerForActivityResult(
@@ -75,7 +79,14 @@ public class DocumentActionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         setContentView(R.layout.activity_document_action);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
 
         // Inicializa as Views
         imgFullDocument = findViewById(R.id.imgFullDocument);
@@ -190,7 +201,7 @@ public class DocumentActionActivity extends AppCompatActivity {
     }
 
     // ===============================================================
-    // LÓGICA DA LANGUAGETOOL REINTRODUZIDA
+    // LÓGICA DA LANGUAGETOOL
     // ===============================================================
 
     private void performLanguageCheck(final String text) {

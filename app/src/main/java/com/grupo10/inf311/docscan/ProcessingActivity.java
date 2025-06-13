@@ -1,17 +1,21 @@
 package com.grupo10.inf311.docscan;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -24,14 +28,35 @@ public class ProcessingActivity extends AppCompatActivity {
 
     private static final String TAG = "ProcessingActivity";
     public static final String EXTRA_IMAGE_URI = "EXTRA_IMAGE_URI";
-    public static final String RESULT_OCR_TEXT = "RESULT_OCR_TEXT"; // Chave para devolver o texto
+    public static final String RESULT_OCR_TEXT = "RESULT_OCR_TEXT";
+
+
+    private static final long MIN_DISPLAY_TIME_MS = 1500; // 1.5 segundos
 
     private TextRecognizer textRecognizer;
+    private long startTime; // Variável para guardar o tempo de início
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         setContentView(R.layout.activity_processing);
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        ImageView processingIcon = findViewById(R.id.processing_icon);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(processingIcon, "rotation", 0f, 360f);
+        rotation.setDuration(2000);
+        rotation.setRepeatCount(ObjectAnimator.INFINITE);
+        rotation.setInterpolator(new LinearInterpolator());
+
+
+        rotation.start();
+
+        Drawable drawable = processingIcon.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
+        }
 
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
@@ -39,6 +64,8 @@ public class ProcessingActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_IMAGE_URI)) {
             String imageUriString = intent.getStringExtra(EXTRA_IMAGE_URI);
             if (imageUriString != null && !imageUriString.isEmpty()) {
+
+                startTime = System.currentTimeMillis();
                 startProcessing(Uri.parse(imageUriString));
             } else {
                 finishWithError("Caminho da imagem inválido.");
@@ -50,40 +77,63 @@ public class ProcessingActivity extends AppCompatActivity {
 
     private void startProcessing(Uri imageUri) {
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-            InputImage image = InputImage.fromBitmap(bitmap, 0);
+            InputImage image = InputImage.fromFilePath(this, imageUri);
 
             textRecognizer.process(image)
                     .addOnSuccessListener(visionText -> {
-                        // SUCESSO: Devolve o texto encontrado
                         String resultText = visionText.getText();
-                        finishWithSuccess(resultText);
+                        handleResult(true, resultText);
                     })
                     .addOnFailureListener(e -> {
-                        // FALHA: Devolve uma mensagem de erro
                         Log.e(TAG, "Falha no OCR", e);
-                        finishWithError("Falha no OCR: " + e.getMessage());
+                        handleResult(false, "Falha no OCR: " + e.getMessage());
                     });
         } catch (IOException e) {
             Log.e(TAG, "Erro ao carregar imagem para OCR", e);
-            finishWithError("Erro ao carregar a imagem.");
+            handleResult(false, "Erro ao carregar a imagem.");
         }
     }
 
-    // Método para finalizar a activity e devolver o resultado com sucesso
+
+    private void handleResult(boolean isSuccess, String resultText) {
+        long elapsedTime = System.currentTimeMillis() - startTime;
+
+        if (elapsedTime < MIN_DISPLAY_TIME_MS) {
+            // Se o processamento foi rápido demais, calcula o delay necessário
+            long delayNeeded = MIN_DISPLAY_TIME_MS - elapsedTime;
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (isSuccess) {
+                    finishWithSuccess(resultText);
+                } else {
+                    finishWithError(resultText);
+                }
+            }, delayNeeded);
+        } else {
+            // Se já demorou o suficiente, finaliza imediatamente
+            if (isSuccess) {
+                finishWithSuccess(resultText);
+            } else {
+                finishWithError(resultText);
+            }
+        }
+    }
+
     private void finishWithSuccess(String ocrText) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(RESULT_OCR_TEXT, ocrText);
         setResult(Activity.RESULT_OK, resultIntent);
-        finish(); // Fecha esta activity e volta para a anterior
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
     }
 
-    // Método para finalizar a activity e devolver um erro
     private void finishWithError(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(RESULT_OCR_TEXT, errorMessage); // Opcional: devolver a msg de erro
+        resultIntent.putExtra(RESULT_OCR_TEXT, errorMessage);
         setResult(Activity.RESULT_CANCELED, resultIntent);
-        finish(); // Fecha esta activity e volta para a anterior
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
     }
 }
