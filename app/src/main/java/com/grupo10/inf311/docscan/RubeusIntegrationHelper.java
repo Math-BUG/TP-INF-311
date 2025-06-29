@@ -13,8 +13,8 @@ import java.util.UUID;
 public class RubeusIntegrationHelper {
     private static final String TAG = "RubeusIntegrationHelper";
 
-    private static final String API_TOKEN = "b0cc357decf63354ffb0c3c6ba913f10";
-    private static final Integer ORIGEM_APP = 8;
+    private static final String API_TOKEN = "";//chave de api
+    private static final Integer ORIGEM_APP = 0;//numero do canal da rubeus
     private static final int TIPO_EVENTO_VALIDACAO = 1;
 
     public interface RubeusCallback {
