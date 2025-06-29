@@ -7,6 +7,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -24,6 +25,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DocScan">
+        <activity
+            android:name=".RgProcessingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DocumentScanActivity"
+            android:exported="false" />
         <activity
             android:name=".TextViewerActivity"
             android:exported="false" />
@@ -62,6 +69,7 @@
         <activity
             android:name=".tela_cadastro"
             android:exported="false" />
+
     </application>
 
 </manifest>

@@ -112,7 +112,8 @@ public class HomeActivity extends AppCompatActivity implements DocumentAdapter.O
 
         navScanButton.setOnClickListener(v -> {
             Toast.makeText(this, "SCAN", Toast.LENGTH_SHORT).show();
-            showAddDocumentOptions();
+            Intent intent = new Intent(this, DocumentScanActivity.class);
+            startActivity(intent);
         });
 
         navSettingsLayout.setOnClickListener(v -> {
@@ -235,13 +236,17 @@ public class HomeActivity extends AppCompatActivity implements DocumentAdapter.O
     private void showAddDocumentOptions() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Adicionar Documento")
-                .setItems(new CharSequence[]{"Tirar Foto", "Escolher da Galeria"}, (dialog, which) -> {
+                .setItems(new CharSequence[]{"Tirar Foto", "Escolher da Galeria", "Escanear RG"}, (dialog, which) -> {
                     if (which == 0) {
                         selectedImageSource = SOURCE_CAMERA;
                         checkAndRequestPermissionsForCamera();
-                    } else {
+                    } else if (which == 1) {
                         selectedImageSource = SOURCE_GALLERY;
                         checkAndRequestPermissionsForGallery();
+                    } else if (which == 2) {
+                        // Nova opção para escanear RG
+                        Intent intent = new Intent(this, DocumentScanActivity.class);
+                        startActivity(intent);
                     }
                 })
                 .show();

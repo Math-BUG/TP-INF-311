@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         btnTesteLangaugeTool.setOnClickListener(v -> {
 //            Intent it = new Intent(this, LanguageToolActivity.class);
 //            startActivity(it);
+            EventTester.executeTest();
             Intent it = new Intent(this, HomeActivity.class);
             startActivity(it);
         });
