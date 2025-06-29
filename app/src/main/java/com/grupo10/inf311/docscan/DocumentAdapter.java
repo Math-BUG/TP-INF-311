@@ -1,5 +1,5 @@
 package com.grupo10.inf311.docscan;
-// DocumentAdapter.java
+
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
