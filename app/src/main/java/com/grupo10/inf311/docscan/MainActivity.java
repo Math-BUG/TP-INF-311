@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
         });
         Button btnTesteLangaugeTool = findViewById(R.id.signInButton);
         btnTesteLangaugeTool.setOnClickListener(v -> {
-//            Intent it = new Intent(this, LanguageToolActivity.class);
-//            startActivity(it);
-            EventTester.executeTest();
+
             Intent it = new Intent(this, HomeActivity.class);
             startActivity(it);
         });
